@@ -1,5 +1,3 @@
-const { app } = require('../server');
+import app from '../index';
 
-module.exports = {
-    app
-};
+export default app;
