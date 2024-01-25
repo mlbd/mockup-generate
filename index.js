@@ -5,7 +5,7 @@ const { createCanvas, loadImage } = require('canvas');
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 /**
  * Extracts the file extension from a given URL.
