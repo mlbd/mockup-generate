@@ -102,9 +102,6 @@ app.post('/generate-image', async (req, res) => {
 
         const dataUrl = canvas.toDataURL('image/png');
 
-        // set json return data
-        res.setHeader('Content-Type', 'application/json');
-
         res.json({ thumbnail_url, filename, dataUrl });
     } catch (error) {
         console.error('Error:', error);
