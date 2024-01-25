@@ -114,11 +114,8 @@ app.post('/generate-image', async (req, res) => {
     }
 });
 
-module.exports = {
-    app, // Export the entire app instance
-    port,
-};
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
