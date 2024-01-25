@@ -1,6 +1,6 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import { createCanvas, loadImage } from 'canvas';
+const express = require('express');
+const bodyParser = require('body-parser');
+const { createCanvas, loadImage } = require('canvas');
 
 const app = express();
 const port = 3000;
@@ -66,10 +66,10 @@ app.post('/generate-image', async (req, res) => {
         const { thumbnail_url, position_data, post_id, logo } = req.body;
 
         // Log received data for debugging
-        console.log('Received thumbnail_url:', thumbnail_url);
-        console.log('Received position_data:', position_data);
-        console.log('Received post_id:', post_id);
-        console.log('Received logo:', logo);
+        // console.log('Received thumbnail_url:', thumbnail_url);
+        // console.log('Received position_data:', position_data);
+        // console.log('Received post_id:', post_id);
+        // console.log('Received logo:', logo);
 
         const file_ext = getFileExtensionFromUrl(thumbnail_url);
         let filename = post_id + '.' + file_ext;
@@ -114,8 +114,8 @@ app.post('/generate-image', async (req, res) => {
     }
 });
 
-export default app;
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
