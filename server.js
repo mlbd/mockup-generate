@@ -7,6 +7,12 @@ const port = 3000;
 
 app.use(bodyParser.json());
 
+/**
+ * Extracts the file extension from a given URL.
+ *
+ * @param {string} url - the URL from which to extract the file extension
+ * @return {string|null} the file extension in lowercase, or null if no extension is found
+ */
 function getFileExtensionFromUrl(url) {
     // Use a regular expression to extract the file extension
     const regex = /(?:\.([^.]+))?$/; // Match the last dot and anything after it
@@ -20,6 +26,14 @@ function getFileExtensionFromUrl(url) {
     }
 }
 
+/**
+ * Calculates the new height based on the aspect ratio of the original width and height.
+ *
+ * @param {number} originalWidth - The original width
+ * @param {number} originalHeight - The original height
+ * @param {number} newWidth - The new width
+ * @return {number} The calculated new height
+ */
 function aspect_height(originalWidth, originalHeight, newWidth) {
     // Calculate the aspect ratio
     const aspectRatio = originalWidth / originalHeight;
@@ -30,6 +44,14 @@ function aspect_height(originalWidth, originalHeight, newWidth) {
     return newHeight;
 }
 
+/**
+ * A function to calculate the new y coordinate based on the given height and y coordinate.
+ *
+ * @param {number} newHeight - the new height value
+ * @param {number} height - the current height value
+ * @param {number} y - the current y coordinate value
+ * @return {number} the new y coordinate value
+ */
 function aspectY(newHeight, height, y) {
     const newY = height > newHeight ? y + (height - newHeight) : y - ((newHeight - height)/2);
     return newY;
@@ -40,10 +62,10 @@ app.post('/generate-image', async (req, res) => {
         const { thumbnail_url, position_data, post_id, logo } = req.body;
 
         // Log received data for debugging
-        console.log('Received thumbnail_url:', thumbnail_url);
-        console.log('Received position_data:', position_data);
-        console.log('Received post_id:', post_id);
-        console.log('Received logo:', logo);
+        // console.log('Received thumbnail_url:', thumbnail_url);
+        // console.log('Received position_data:', position_data);
+        // console.log('Received post_id:', post_id);
+        // console.log('Received logo:', logo);
 
         const file_ext = getFileExtensionFromUrl(thumbnail_url);
         let filename = post_id + '.' + file_ext;
@@ -79,7 +101,7 @@ app.post('/generate-image', async (req, res) => {
         // set json return data
         res.setHeader('Content-Type', 'application/json');
 
-        res.json({ thumbnail_url, position_data, dataUrl });
+        res.json({ thumbnail_url, filename, dataUrl });
     } catch (error) {
         console.error('Error:', error);
 
