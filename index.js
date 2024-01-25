@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const { createCanvas, loadImage } = require('canvas');
+
 
 const app = express();
 const port = 5000;
@@ -60,7 +62,7 @@ function aspectY(newHeight, height, y) {
     return newY;
 }
 
-app.post("/generate-image", (req, res) => {
+app.post("/generate-image", async (req, res) => {
 
     try {
         const { thumbnail_url, position_data, post_id, logo } = req.body;
