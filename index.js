@@ -1,8 +1,8 @@
 const express = require("express");
-
+const bodyParser = require('body-parser');
 const app = express();
 
-app.use(express.json());
+app.use(bodyParser.json());
 
 app.post("/", (req, res) => {
     try {
@@ -20,9 +20,7 @@ app.post("/", (req, res) => {
 
         res.json({ thumbnail_url, filename });
     } catch (error) {
-        console.error('Error:', error);
-
-        res.setHeader('Content-Type', 'application/json');
+     
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
