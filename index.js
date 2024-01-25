@@ -1,16 +1,11 @@
-const express = require("express");
+const express = require('express');
 const bodyParser = require('body-parser');
 const { createCanvas, loadImage } = require('canvas');
 
-
 const app = express();
-const port = 5000;
+const port = 3000;
 
 app.use(bodyParser.json());
-
-app.get("/", (req, res) => {
-  res.send("Express on Vercel");
-});
 
 /**
  * Extracts the file extension from a given URL.
@@ -62,8 +57,11 @@ function aspectY(newHeight, height, y) {
     return newY;
 }
 
-app.post("/generate-image", async (req, res) => {
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 
+app.post('/generate-image', async (req, res) => {
     try {
         const { thumbnail_url, position_data, post_id, logo } = req.body;
 
@@ -104,18 +102,23 @@ app.post("/generate-image", async (req, res) => {
 
         const dataUrl = canvas.toDataURL('image/png');
 
-        res.json({ filename, dataUrl });
+        // set json return data
+        res.setHeader('Content-Type', 'application/json');
+
+        res.json({ thumbnail_url, filename, dataUrl });
     } catch (error) {
         console.error('Error:', error);
 
         res.setHeader('Content-Type', 'application/json');
         res.status(500).json({ error: 'Internal Server Error' });
     }
-})
-
-app.listen(port, () => {
-  console.log("Running on port 5000.");
 });
 
-// Export the Express API
-module.exports = app;
+module.exports = {
+    app, // Export the entire app instance
+    port,
+};
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
