@@ -57,32 +57,10 @@ function aspectY(newHeight, height, y) {
     return newY;
 }
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
 });
 
-app.post('/generate-image', async (req, res) => {
-    try {
-        const { thumbnail_url, position_data, post_id, logo } = req.body;
-
-        // Log received data for debugging
-        // console.log('Received thumbnail_url:', thumbnail_url);
-        // console.log('Received position_data:', position_data);
-        // console.log('Received post_id:', post_id);
-        // console.log('Received logo:', logo);
-
-        const file_ext = getFileExtensionFromUrl(thumbnail_url);
-        let filename = post_id + '.' + file_ext;
-
-
-        res.json({ thumbnail_url, filename });
-    } catch (error) {
-        console.error('Error:', error);
-
-        res.setHeader('Content-Type', 'application/json');
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
