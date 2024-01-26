@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const { createCanvas, loadImage } = require('canvas');
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -54,54 +56,65 @@ function aspectY(newHeight, height, y) {
     return newY;
 }
 
-app.post("/", async (req, res) => {
-
-    const { thumbnail_url, position_data, post_id, logo } = req.body;
-
-    // Log received data for debugging
-    // console.log('Received thumbnail_url:', thumbnail_url);
-    // console.log('Received position_data:', position_data);
-    // console.log('Received post_id:', post_id);
-    // console.log('Received logo:', logo);
-
-    const file_ext = getFileExtensionFromUrl(thumbnail_url);
-    let filename = post_id + '.' + file_ext;
-
-    const thumbnailImage = await loadImage(thumbnail_url);
-
-    const canvas = createCanvas(thumbnailImage.width, thumbnailImage.height);
-    const ctx = canvas.getContext('2d');
-
-    ctx.drawImage(thumbnailImage, 0, 0);
-
-    if (position_data) {
-        let { x, y, width, height, angle } = position_data;
-
-        const logoImage = await loadImage(logo);
-
-            // Use the original width and height of the logo
-            const originalWidth = logoImage.width;
-            const originalHeight = logoImage.height;
-
-            const newHeight = aspect_height(originalWidth, originalHeight, width);
-            const newY =  aspectY(newHeight, height, y);
-
-            ctx.save();
-            ctx.translate(x + width / 2, newY + newHeight / 2);
-            ctx.rotate(angle);
-            ctx.drawImage(logoImage, -width / 2, -newHeight / 2, width, newHeight);
-            ctx.restore();
-    }
-
-    const dataUrl = canvas.toDataURL('image/png');
-
-    // set json return data
-    res.setHeader('Content-Type', 'application/json');
-
-    res.json({ thumbnail_url, filename, dataUrl });
+app.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 
-app.listen(5000, () => {
+app.post("/image", async (req, res) => {
+
+    try {
+        const { thumbnail_url, position_data, post_id, logo } = req.body;
+
+        // Log received data for debugging
+        // console.log('Received thumbnail_url:', thumbnail_url);
+        // console.log('Received position_data:', position_data);
+        // console.log('Received post_id:', post_id);
+        // console.log('Received logo:', logo);
+
+        const file_ext = getFileExtensionFromUrl(thumbnail_url);
+        let filename = post_id + '.' + file_ext;
+
+        const thumbnailImage = await loadImage(thumbnail_url);
+
+        const canvas = createCanvas(thumbnailImage.width, thumbnailImage.height);
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(thumbnailImage, 0, 0);
+
+        if (position_data) {
+            let { x, y, width, height, angle } = position_data;
+
+            const logoImage = await loadImage(logo);
+
+             // Use the original width and height of the logo
+             const originalWidth = logoImage.width;
+             const originalHeight = logoImage.height;
+
+             const newHeight = aspect_height(originalWidth, originalHeight, width);
+             const newY =  aspectY(newHeight, height, y);
+
+             ctx.save();
+             ctx.translate(x + width / 2, newY + newHeight / 2);
+             ctx.rotate(angle);
+             ctx.drawImage(logoImage, -width / 2, -newHeight / 2, width, newHeight);
+             ctx.restore();
+        }
+
+        const dataUrl = canvas.toDataURL('image/png');
+
+        // set json return data
+        res.setHeader('Content-Type', 'application/json');
+
+        res.json({ thumbnail_url, filename, dataUrl });
+    } catch (error) {
+        console.error('Error:', error);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.listen(3000, () => {
   console.log("Running on port 5000.");
 });
 
